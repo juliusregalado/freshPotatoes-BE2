@@ -98,7 +98,30 @@ function getAllGenres(req, res) {
 };
 
 function getFilmRecommendations(req, res) {
-  res.status(500).send('Not Implemented');
+  // res.status(500).send('Not Implemented');
+  console.log('getFilmRecommendations -->')
+  let limit = 10, offset = 0;
+  if (!Number.isInteger(parseInt(req.params.id, 10))) {
+    res.status(422).json({
+        message: 'error, bad request -getFilmRecommendations'
+      });
+  }
+  if (req.query.limit) {
+    if (!Number.isInteger(parseInt(req.query.limit, 10))) {
+      res.status(422).json({
+          message: 'error, bad request -getFilmRecommendations'
+        });
+    }
+    limit = parseInt(req.query.limit, 10);
+  }
+  if (req.query.offset) {
+    if (!Number.isInteger(parseInt(req.query.offset, 10))) {
+      res.status(422).json({
+          message: 'error, bad request -getFilmRecommendations'
+        });
+    }
+    offset = parseInt(req.query.offset, 10);
+  }
 }
 
 module.exports = app;
