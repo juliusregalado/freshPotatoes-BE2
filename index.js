@@ -23,7 +23,42 @@ sequelize
   })
 
 // MODELS
+const FILM = sequelize.define('film', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  title: {
+    type: Sequelize.STRING
+  },
+  release_date: {
+    type: Sequelize.DATEONLY
+  },
+  tagline: {
+    type: Sequelize.STRING
+  },
+  genre_id: {
+    type: Sequelize.INTEGER
+  }
+}, {
+  underscored: true,
+  timestamps: false
+});
 
+const GENRE =  sequelize.define('genre', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: Sequelize.STRING
+  }
+}, {
+  underscored: true,
+  timestamps: false
+});
 
 // START SERVER
 Promise.resolve()
@@ -31,9 +66,37 @@ Promise.resolve()
   .catch((err) => { if (NODE_ENV === 'development') console.error(err.stack); });
 
 // ROUTES
+app.get('/', (req,res) => {
+  res.send('You can do this!')
+});
+app.get('/films/all', getAllFilms);
+app.get('/genres/all', getAllGenres);
 app.get('/films/:id/recommendations', getFilmRecommendations);
+app.get('*', (req,res) => {
+  res.status(404).json({
+    message: 'page not found'
+  })
+})
 
 // ROUTE HANDLER
+
+function getAllFilms(req, res) {
+  FILM.findAll()
+    .then(films => {
+      console.log(films)
+    })
+};
+
+function getAllGenres(req, res) {
+  GENRE.findAll()
+  .then(genres => {
+    res.json({
+      message: 'ok',
+      genre: genres
+    })
+  })
+};
+
 function getFilmRecommendations(req, res) {
   res.status(500).send('Not Implemented');
 }
